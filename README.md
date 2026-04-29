@@ -275,10 +275,10 @@ Note that it may take some time to update without visual feedback: just be patie
   docker image prune --all
   docker system prune --all
   ```
+## 4 Code execution
+Once the docker is up and running you just have to download the needed data and run the script [run_all.sh](files/scripts/run_all.sh). Specifically we will download the VCoR Dataset and the ResNet18 model.
 
-
-
-## 4 The VCoR Dataset
+### 4.1 The VCoR Dataset
 
 The dataset adopted in this tutorial is the **Kaggle' Vehicle Color Recognition**, shortened as  [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset). 	
 
@@ -288,26 +288,26 @@ This dataset is composed of 15 classes of colors (for the cars) to be classified
 
   - open access: [https://www.mdpi.com/2673-2688/2/4/41](https://www.mdpi.com/2673-2688/2/4/41)
 
-While being out of the docker container, download the ~602MB ``archive.zip`` file from the [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset) website and then unzip it to the ``build/dataset/vcor`` folder. Note that the unzip process is also performed by the [run_all.sh](files/run_all.sh) script. To manually do it:
+While being out of the docker container, download the ~602MB ``archive.zip`` file from the [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset) website and place it in ```cpsa-example/files```. The script [run_all.sh](files/scripts/run_all.sh) automatically unzips it and then copies it into ```cpsa-example/files/build/data/vcor```. Note that the dataset is split into ```/train```, ```/val```, and ```/test``` folders.
+
+<!-- then unzip it to the ``build/dataset/vcor`` folder. Note that the unzip process is also performed by the [run_all.sh](files/run_all.sh) script. To manually do it:
 
 ```bash
 cd ${WRK_DIR}/tutorials/cpsa-example/files
 # you must have already downloaded the zip archive
 unzip ./archive.zip -d ./build/data/vcor/
 ```
+-->
 
-
-
-## 5 Vehicle Color Classification with ResNet18
+### 4.2 Vehicle Color Classification with ResNet18
 
 Once we have our dataset, we can move to the process of loading the model. From now on, every process will be performed on the container, so activate it as we saw in Section [3.2](#32-launch-the-docker-image).
 
-### 5.1  Get ResNet18 from Vitis AI Model Zoo
+#### 4.2.1  Get ResNet18 from Vitis AI Model Zoo
 
-You have to download the ``pt_vehicle-color-classification_3.5.zip`` archive of ResNet18 reported in this [model.yaml](https://github.com/Xilinx/Vitis-AI/blob/master/model_zoo/model-list/pt_vehicle-color-classification_3.5/model.yaml) file.
-As the file name says, such CNN has been trained RGB images of input size 224x224 and it requires a computation of 3.64GOPs per image.
+You have to download the ``pt_vehicle-color-classification_3.5.zip`` archive of ResNet18 reported in this [model.yaml](https://github.com/Xilinx/Vitis-AI/blob/master/model_zoo/model-list/pt_vehicle-color-classification_3.5/model.yaml) file. As the file name says, such CNN has been trained RGB images of input size 224x224 and it requires a computation of 3.64GOPs per image. Once downloaded, place it in ```cpsa-example/files``` as it was done for the dataset. The script  [run_all.sh](files/scripts/run_all.sh) automatically unzips it and copies the pretrained float model in ```cpsa-example/files/build/float```.
 
-From the docker image, unzip the archive ``pt_vehicle-color-classification_3.5.zip`` in the ``files`` folder
+<!-- From the docker image, unzip the archive ``pt_vehicle-color-classification_3.5.zip`` in the ``files`` folder
 and clean some files/folders, doing the following actions (already available in the [run_all.sh](files/run_all.sh) script):
 
 ```shell
@@ -326,11 +326,9 @@ cd pt_vehicle-color-classification_3.5
 rm -rf code data *.md *.txt *.sh
 cd ..
 ```
+-->
 
-You will get the ``files/pt_vehicle-color-classification_3.5/`` folder where you can find the pre-trained floating point model and the quantized model respectively in the sub-folder ``float`` and ``quant``. You can ignore and remove all the other sub-folders. The ResNet18 CNN applied in this tutorial aims to recognize the color of the car vehicle in the input image.
-
-In practical applications, the input image often contains multiple vehicles, or there are many areas as the background,
-so it is usually used together with an object detection CNN, which means firstly use the object detection network to detect the vehicle area and cut the original image according to the bounding box which is the output of the object detection network, then send the cropped image to the network for classification. In the ``pt_vehicle-color-classification_3.5``
+In practical applications, the input image often contains multiple vehicles, or there are many areas as the background, so it is usually used together with an object detection CNN, which means firstly use the object detection network to detect the vehicle area and cut the original image according to the bounding box which is the output of the object detection network, then send the cropped image to the network for classification. In the ``pt_vehicle-color-classification_3.5``
 you could use the YoloV3 CNN to detect the cars in the VCoR dataset and use cropped images to build a new dataset to train and test the model.
 If your input image contains little background, or your CNN is not used in conjunction with an object detection CNN, then you can skip this step (which is what done indeed in this tutorial. but it may be an interesting extension).
 
@@ -342,51 +340,26 @@ This vehicle color model falls under the [Vitis AI Library “classification” 
 
 - The DPU output will be a [data structure of classification results](https://docs.xilinx.com/r/en-US/ug1354-xilinx-ai-sdk/vitis-ai-Classification) with 15 classes. Such output tensor will then be used by the ARM CPU to compute the functions ``SoftMax`` and related ``Top-5`` prediction accuracy.
 
-
-
-<!--### 5.2 Training
-
-If you want to train the ResNet18 CNN on the VCoR dataset from scratch, just launch the script [run_train.sh](files/scripts/run_train.sh) (which is already done from the [run_all.sh](files/scripts/run_all.sh) script):
+## 4.3 Execution
+Now that the needed archives are placed in the ```/files``` folder, run the script as follows:
 
 ```shell
+# If needed activate the docker image and activate the environment
 cd ${WRK_DIR} # you are now in Vitis_AI subfolder
-# enter in the docker image
 ./docker_run.sh xilinx/vitis-ai-pytorch-gpu:latest
-# activate the environment
 conda activate vitis-ai-pytorch
-# go to the tutorial directory
+# If needed move to tutorials directory
 cd /workspace/tutorials/
-cd PyTorch-ResNet18/files # your current directory
-bash -x ./scripts/run_train.sh main_vcor
+cd cpsa-example/files # your current directory
+# Execute the script
+bash run_all.sh main_vcor # remember to add main_vcor parameter to this call, which identifies the function to call within the script itself
 ```
+The script will perform:
+1. Quantization
+2. Compilation
 
-You should see something like this:
-
-```text
-. . .
-
-Train Epoch: 29 [0/7267 (0%)]	Loss: 0.004103
-Train Epoch: 29 [5120/7267 (71%)]	Loss: 0.006058
-Test set: Average loss: 0.4320, Accuracy: 1380/1550 (89.032%)
-
-. . .
-
-classes: ['beige', 'black', 'blue', 'brown', 'gold', 'green', 'grey', 'orange', 'pink', 'purple', 'red', 'silver', 'tan', 'white', 'yellow']
-
-Test set: Average loss: 0.4320, Accuracy: 1380/1550 (89.032%)
-```
-
-Note that when you use ``ToTensor()`` class in the [train.py](files/code/train.py) and [test.py](files/code/test.py) files, PyTorch [automatically converts all images into ``[0,1]`` range](https://discuss.pytorch.org/t/does-pytorch-automatically-normalizes-image-to-0-1/40022).
-
-The images are supposed to be in RGB format and not in BGR (usually adopted by OpenCV library) -->
-
-
-### 5.2 Quantization
-
-Given the pre-trained floating-point model we can perform quantization using the script [run_quant.sh](files/scripts/run_quant.sh) (which is already done from the [run_all.sh](files/scripts/run_all.sh) script). To run it manually:
-
-You should see something like this:
-
+### 4.3.1 Quantization
+Quantization is executed by means of [run_quant.sh](files/scripts/run_quant.sh). You should see something like:
 ```text
 . . .
 
@@ -402,7 +375,6 @@ Test set: Average loss: 0.4234, Accuracy: 1376/1550 (88.774%)
 [VAIQ_NOTE]: ResNet_int.pt is generated.(quantized/ResNet_int.pt)
 [VAIQ_NOTE]: ResNet_int.onnx is generated.(quantized/ResNet_int.onnx)
 ```
-
 This script can be easily adapted to other models and datasets by changing:
 ```bash
 WEIGHTS_FILE=${path to the trained model checkpoint}
@@ -410,9 +382,9 @@ DATASET=${name of the dataset}
 BACKBONE=${custom model}
 ```
 
-### 5.3 Compile the Target DPU  
+### 4.3.2 Compilation
 
-The quantized CNN has then to be compiled for the DPU architecture of your target board, with the script [run_compile.sh](files/scripts/run_compile_kv260.sh) (which is already done from the [run_all.sh](files/scripts/run_all.sh) script).
+The quantized CNN has then to be compiled for the DPU architecture of your target board, with the script [run_compile.sh](files/scripts/run_compile_kv260.sh).
 
 You should see something like this:
 
@@ -437,7 +409,7 @@ MODEL COMPILED
 ```
 
 
-### 5.4 Run on the Target Board
+## 5 Run on the Board
 
 Now that we have the compiled ```.xmodel``` we can deploy to the Kria. Before doing so though, we have to prepare the target board accordingly. From now on we will not be needing the VAI docker anymore, so we can switch to new fresh shell.
 
@@ -474,13 +446,13 @@ This is very important: each time you perform inference you must pre-process the
 Note that the DPU API apply [OpenCV](https://opencv.org/) functions to read an image file (either ``png`` or ``jpg`` or whatever format) therefore the images are seen as BGR and not as native RGB. All the training and inference steps done in this tutorial treat images as RGB, which is true also for the above C++ normalization routine.
 
 
-#### 5.4.1 KV260 Board Setup and Execution
+### 5.1 KV260 Board Setup and Execution
 
 Before going forward with the execution, we must make sure that the board actually contains the target DPU and, if not, we must install it. In the following section we will see:
 1. How to [connect](#connect-to-the-board) to the board.
 2. How to [install](#install-the-b4096-dpu-firmware-package) the DPU firmware package.
 
-###### Prerequisites
+#### 5.2 Prerequisites
 
 We assume the following prerequisites:
 
@@ -522,9 +494,7 @@ eth0
 
 ---
 
-##### Connect to the board
-
-###### Connect the cables
+#### 5.2.1 Connect the board
 
 Connect:
 
@@ -537,7 +507,7 @@ The Ethernet connection is used for SSH, SCP, and Internet sharing.
 
 ---
 
-###### Open the serial console
+##### Open the serial console
 
 On the host PC:
 
@@ -582,9 +552,9 @@ sudo passwd ubuntu
 
 ---
 
-###### Configure the direct Ethernet link
+#### 5.2.2 Configure the direct Ethernet link
 
-###### On the host PC
+##### On the host PC
 To setup the host side of the Ethernet connection we need to decide a static IP address for it. For simplicity, we will use 
 ```10.42.0.1/24```, but you can technically use any other address you want (see [this](#ip-subnet-note) section for a general rule of thumb).
 
@@ -618,7 +588,7 @@ Expected:
 
 If it prints `0`, check the Ethernet cable and the board Ethernet port.
 
-###### On the board, through serial console
+##### On the board, through serial console
 Now we also fix the IP address of the board.
 
 ```bash
@@ -637,7 +607,7 @@ Expected:
 eth0 UP 10.42.0.217/24
 ```
 
-###### IP subnet note
+##### IP subnet note
 
 The IP addresses used for the direct host-board Ethernet link are independent from the network used by the host PC to access the Internet. However, the two networks must not use the same subnet.
 
@@ -665,7 +635,7 @@ The host-board subnet must not conflict with the host Internet subnet.
 ---
 
 
-###### Check that host and board can see each other
+##### Check that host and board can see each other
 
 From the host PC:
 
@@ -695,7 +665,7 @@ The board needs Internet access to install Kria packages, and the host PC will r
 
 ---
 
-###### Find the host Internet interface
+##### Find the host Internet interface
 
 On the host PC:
 
@@ -729,7 +699,7 @@ Make sure `HOST_INTERNET_IF` is not the same as `HOST_BOARD_IF`.
 
 ---
 
-###### Enable IPv4 forwarding on the host
+##### Enable IPv4 forwarding on the host
 
 On the host PC:
 
@@ -747,7 +717,7 @@ You can also perform this operation from Ubuntu's GUI, by going into ```Settings
 
 ---
 
-###### Add NAT forwarding rules on the host
+##### Add NAT forwarding rules on the host
 
 On the host PC:
 
@@ -764,7 +734,7 @@ sudo iptables -C FORWARD -i ${HOST_INTERNET_IF} -o ${HOST_BOARD_IF} -m state --s
 
 ---
 
-###### Configure gateway and DNS on the board
+##### Configure gateway and DNS on the board
 
 On the board:
 
@@ -794,7 +764,7 @@ Do not continue until the board can reach the Internet.
 
 ---
 
-##### Install the required Kria packages and make the DPU available
+#### 5.2.3 Install the required Kria packages and make the DPU available
 
 The board must have the KV260 `benchmark-b4096` firmware application installed and loaded.
 
@@ -802,7 +772,7 @@ This firmware application provides the DPU needed by the compiled model.
 
 ---
 
-###### Update package metadata
+##### Update package metadata
 
 On the board:
 
@@ -826,7 +796,7 @@ If the package is visible, skip to section installation.
 
 ---
 
-###### Initialize the Xilinx/Kria package sources if needed
+##### Initialize the Xilinx/Kria package sources if needed
 
 If `xlnx-firmware-kv260-benchmark-b4096` is not found, initialize the Xilinx package setup:
 
@@ -883,7 +853,7 @@ apt search xlnx-firmware-kv260
 
 ---
 
-###### Install the B4096 DPU firmware package
+##### Install the B4096 DPU firmware package
 
 On the board:
 
@@ -921,7 +891,7 @@ then the DPU firmware package is not installed or not registered correctly.
 
 ---
 
-###### Load the B4096 DPU application
+##### Load the B4096 DPU application
 
 On the board:
 
@@ -1031,7 +1001,7 @@ The test images are generated by the target script, so they do not need to be ma
 
 ---
 
-##### Run the application
+####  5.3 Run the application
 
 On the board:
 
@@ -1058,7 +1028,7 @@ A successful run should:
 
 ---
 
-##### Useful manual test command
+#### 5.4 Useful manual test command
 
 To run only the CNN executable manually:
 
@@ -1084,9 +1054,9 @@ The prediction log should contain prediction lines. If it contains only runtime 
 
 ---
 
-##### Common checks
+#### 5.5 Troubleshooting Connection
 
-###### Host IP is wrong
+##### Host IP is wrong
 
 Do not rely on:
 
@@ -1115,7 +1085,7 @@ The host Ethernet interface connected to the board should be:
 
 ---
 
-###### Board cannot be pinged
+##### Board cannot be pinged
 
 On the host:
 
@@ -1149,7 +1119,7 @@ default route goes via 10.42.0.1
 
 ---
 
-###### Board has no Internet
+##### Board has no Internet
 
 On the board:
 
@@ -1169,7 +1139,7 @@ sudo iptables -S FORWARD
 
 ---
 
-###### `xmutil listapps` shows only `k26-starter-kits`
+##### `xmutil listapps` shows only `k26-starter-kits`
 
 Install and register the B4096 firmware package:
 
@@ -1181,7 +1151,7 @@ sudo xmutil listapps
 
 ---
 
-###### `xdputil query` or `show_dpu` segfaults
+##### `xdputil query` or `show_dpu` segfaults
 
 The DPU application is not correctly loaded.
 
@@ -1203,7 +1173,7 @@ dmesg -T | grep -Ei "dpu|xrt|zocl|xclbin|dfx|firmware|segfault|xilinx" | tail -1
 
 ---
 
-###### Fingerprint mismatch
+##### Fingerprint mismatch
 
 The model and the loaded DPU must have the same fingerprint.
 
@@ -1229,9 +1199,9 @@ If they differ, use the `.xmodel` generated by the repository for the `benchmark
 
 ---
 
-##### Compact command summary
+#### 5.6 Compact command summary
 
-###### Host PC
+##### Host PC
 
 ```bash
 HOST_BOARD_IF=eno1
@@ -1248,7 +1218,7 @@ sudo iptables -A FORWARD -i ${HOST_BOARD_IF} -o ${HOST_INTERNET_IF} -j ACCEPT
 sudo iptables -A FORWARD -i ${HOST_INTERNET_IF} -o ${HOST_BOARD_IF} -m state --state RELATED,ESTABLISHED -j ACCEPT
 ```
 
-###### Board
+##### Board
 
 ```bash
 sudo ip addr flush dev eth0
@@ -1267,7 +1237,7 @@ xdputil query
 show_dpu
 ```
 
-###### Copy and run
+##### Copy and run
 
 From the host:
 
@@ -1285,7 +1255,7 @@ cd target_kv260
 bash -x ./run_all_target.sh kv260
 ```
 
-#### 5.4.3 Generic Run-Time Execution Summary
+#### 6 Generic Run-Time Execution Summary
 
 It is possible and straight-forward to compile the application directly on the target (besides compiling it into the host computer environment).
 In fact this is what the script [run_all_vcor_target.sh](files/target/vcor/run_all_vcor_target.sh)  does, when launched on the target.  
@@ -1316,7 +1286,7 @@ to check the prediction accuracy.
 
 
 
-#### 5.4.4 DPU Performance
+#### 7 DPU Performance
 
 On the KV260 board, the purely DPU performance (not counting the CPU tasks) measured in fps is:
 
