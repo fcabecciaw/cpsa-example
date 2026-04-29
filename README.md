@@ -1,11 +1,21 @@
 <!--
 
+This material is adapted from tutorial material originally authored by:
+
+Author: Daniele Bagni, AMD/Xilinx Inc.
+
+Original copyright:
 Copyright © 2023 Advanced Micro Devices, Inc. All rights reserved.
+
+License:
 SPDX-License-Identifier: MIT
 
-Author: Daniele Bagni, AMD/Xilinx Inc
--->
+Adaptation:
+Adapted by Fabio Cabeccia for educational use in the Cyber-Physical System Architectures course.
 
+Modifications include reorganization and simplification.
+
+-->
 
 <!-- <table class="sphinxhide" width="100%">
  <tr width="100%">
