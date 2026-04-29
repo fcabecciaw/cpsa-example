@@ -102,7 +102,6 @@ Then, we need to build a folder named ``tutorials`` where we will clone this rep
 cd WRK_DIR
 mkdir tutorials && cd ./tutorials
 git clone https://github.com/fcabecciaw/cpsa-example.git
-cd ./cpsa-example
 ```
 Using the command ``tree -d -L 2`` you should see a directory structure similar to the following:
 
@@ -193,7 +192,7 @@ You have to know few things about [Docker](https://docs.docker.com/) in order to
 
 ### 3.1 Build the Image
 
-This tutorial assumes that you are going to use one of the containers available at [Docker Hub](https://hub.docker.com/u/xilinx), and thus this section is only useful if you would like to try a different combination of framework and architecture (e.g. PyTorch with CUDA).
+This tutorial assumes that you are going to use one of the containers available at [Docker Hub](https://hub.docker.com/u/xilinx), and thus this section is only useful if you would like to try a different combination of framework and architecture (e.g. PyTorch with CUDA). If you are not going to build your own docker, skip to section 3.2 (the rest of the tutorial will work the same in both cases).
 
 From the Vitis AI 3.5 repository, run the following commands:
 
@@ -226,18 +225,16 @@ cd /workspace/tutorials/cpsa-example # your current directory
 ```
 
 Note that the container maps the shared folder ``/workspace`` with the file system of the Host PC from where you launch the above command.
-This shared folder enables you to transfer files from the Host PC to the docker container and vice versa.
+This shared folder enables you to transfer files from the Host PC to the docker container and vice versa. If you followed the previous steps, ``/workspace == ${WRK_DIR}``.
 
 The docker container does not have any graphic editor, so it is recommended that you work with two terminals and you point to the same folder, in one terminal you use the docker container commands and in the other terminal you open any graphic editor you like. A typical setup would be [VSCode](https://code.visualstudio.com/) with the [DevContainer](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension, which allows you to attach the former to any running container in your system.
 
-The test script also uses two PyTorch extensions, ``randaugment`` and ``torchsummary``. To install them:
+The test script also uses two PyTorch extensions, ``randaugment`` and ``torchsummary``. To install them in the docker:
 
 ```
-sudo su
-conda activate vitis-ai-pytorch
+conda activate vitis-ai-pytorch # if the environment is not active already
 pip install randaugment
 pip install torchsummary
-#exit
 ```
 
 then remember to permanently save the modified docker image from a different terminal (a second one, besides the first one in which you are running the docker image),
@@ -247,9 +244,7 @@ by launching the following commands:
 $ sudo docker ps -l
 $ sudo docker commit -m"COMMENT" CONTAINER_ID DOCKER_IMAGE
 ```
-
-you should see something like this:
-
+The keys ```CONTAINER_ID``` and ```DOCKER_IMAGE``` can be copied after executing the first command, as you can see in the following:
 ```
 $ sudo docker ps -l
 CONTAINER ID   IMAGE                                       COMMAND                  CREATED       
@@ -257,9 +252,9 @@ CONTAINER ID   IMAGE                                       COMMAND              
 
 $ sudo docker commit -m"pyt new_package" 8626279e926e   xilinx/vitis-ai-pytorch-cpu:3.5.0.001-b56bcce50  
 ```
+Note that it may take some time to update without visual feedback: just be patient!
 
-
-### 3.3 Things to Know
+### 3.3 Troubleshooting Docker
 
 1. In case you "[Cannot connect to the Docker daemon at unix:/var/d9f942cdf7de   xilinx/vitis-ai-tensorflow2-gpu:3.5.0.001-b56bcce50 run/docker.sock. Is the docker daemon running?](https://stackoverflow.com/questions/44678725/cannot-connect-to-the-docker-daemon-at-unix-var-run-docker-sock-is-the-docker)" just launch the following command:
 
@@ -282,6 +277,7 @@ $ sudo docker commit -m"pyt new_package" 8626279e926e   xilinx/vitis-ai-pytorch-
   ```
 
 
+
 ## 4 The VCoR Dataset
 
 The dataset adopted in this tutorial is the **Kaggle' Vehicle Color Recognition**, shortened as  [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset). 	
@@ -292,7 +288,7 @@ This dataset is composed of 15 classes of colors (for the cars) to be classified
 
   - open access: [https://www.mdpi.com/2673-2688/2/4/41](https://www.mdpi.com/2673-2688/2/4/41)
 
-While being out of the docker container, download the ~602MB ``archive.zip`` file from the [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset) website and then unzip it to the``build/dataset/vcor`` folder. Note that this process is also performed by the [run_all.sh](files/run_all.sh) script:
+While being out of the docker container, download the ~602MB ``archive.zip`` file from the [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset) website and then unzip it to the ``build/dataset/vcor`` folder. Note that the unzip process is also performed by the [run_all.sh](files/run_all.sh) script. To manually do it:
 
 ```bash
 cd ${WRK_DIR}/tutorials/cpsa-example/files
@@ -316,13 +312,13 @@ and clean some files/folders, doing the following actions (already available in 
 
 ```shell
 cd ${WRK_DIR} # you are now in Vitis_AI subfolder
-# enter in the docker image
+# enter in the docker image if needed
 ./docker_run.sh xilinx/vitis-ai-pytorch-gpu:latest
 # activate the environment
 conda activate vitis-ai-pytorch
 # go to the tutorial directory
 cd /workspace/tutorials/
-cd PyTorch-ResNet18/files # your current directory
+cd cpsa-example/files # your current directory
 # you must have already downloaded the archive
 unzip pt_vehicle-color-classification_3.5.zip
 # clean some files/folders
@@ -387,7 +383,7 @@ The images are supposed to be in RGB format and not in BGR (usually adopted by O
 
 ### 5.2 Quantization
 
-Given the pre-trained floating-point model we can perform quantization using the script [run_quant.sh](files/scripts/run_quant.sh) (which is already done from the [run_all.sh](files/scripts/run_all.sh) script).
+Given the pre-trained floating-point model we can perform quantization using the script [run_quant.sh](files/scripts/run_quant.sh) (which is already done from the [run_all.sh](files/scripts/run_all.sh) script). To run it manually:
 
 You should see something like this:
 
