@@ -355,7 +355,7 @@ Now that the needed archives are placed in the ```/files``` folder, run the scri
 ```shell
 # If needed activate the docker image and activate the environment
 cd ${WRK_DIR} # you are now in Vitis_AI subfolder
-./docker_run.sh xilinx/vitis-ai-pytorch-gpu:latest
+./docker_run.sh xilinx/vitis-ai-pytorch-cpu:latest
 conda activate vitis-ai-pytorch
 # If needed move to tutorials directory
 cd /workspace/tutorials/
