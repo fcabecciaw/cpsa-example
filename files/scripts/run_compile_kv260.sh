@@ -1,5 +1,6 @@
 #!/bin/bash
-ARCH=/opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json
+#ARCH=/opt/vitis_ai/compiler/arch/DPUCZDX8G/KV260/arch.json
+ARCH=/home/cpsa/Scrivania/Vitis-AI/tutorials/cpsa-example/files/arch_kv260_benchmark_b4096.json
 TARGET=kv260
 echo "-----------------------------------------"
 echo "COMPILING MODEL FOR KV260.."
