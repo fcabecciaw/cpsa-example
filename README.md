@@ -91,7 +91,7 @@ Here is what you need to have and do before starting with the real content of th
 
 -  Accurate reading of [Vitis AI User 3.5 Guide 1414](https://docs.xilinx.com/r/en-US/ug1414-vitis-ai) (shortly UG1414).
 
-- Accurate reading of [Vitis AI 3.5 Online Documentation](https://xilinx.github.io/Vitis-AI/3.5/html/index.html). In particular, pay attention to the installation and setup instructions for both host PC and target board. We prepared a plug-and-play virtual machine (```VM``` from now on) so that you do not need to pass through this step, but it may be a useful reading anyway.
+- Accurate reading of [Vitis AI 3.5 Online Documentation](https://xilinx.github.io/Vitis-AI/3.5/html/index.html). In particular, pay attention to the installation and setup instructions for both host PC and target board. 
 
 - The target board AMD Zynq® UltraScale+™ MPSoC [KV260](https://www.amd.com/en/products/system-on-modules/kria/k26/kv260-vision-starter-kit.html), with its Starter Kit Application Firmware installed. The board must be reachable over serial console and Ethernet and must load the `kv260-benchmark-b4096` DPU firmware application. The full board preparation flow is detailed in Section [5.1](#51-kv260-board-setup-and-execution).
 
@@ -102,13 +102,13 @@ Here is what you need to have and do before starting with the real content of th
 
 ### 2.1 Working Directory
 
-In the following of this document it is assumed you have installed Vitis AI 3.5 (shortly ``VAI3.5``) somewhere in your file system and this will be your working directory ``${WRK_DIR}``. In the provided ```VM```, the path is ``/home/cpsa/VAI3.5``. Let's export it as a global variable for convenience:
+In the following of this document it is assumed you have installed Vitis AI 3.5 (shortly ``VAI3.5``) somewhere in your file system and this will be your working directory ``${WRK_DIR}``. Let's export it as a global variable for convenience:
 ```bash
 export WRK_DIR = /home/cpsa/VAI3.5
 ```
 Then, we need to build a folder named ``tutorials`` where we will clone this repo:
 ```bash
-cd WRK_DIR
+cd $WRK_DIR
 mkdir tutorials && cd ./tutorials
 git clone https://github.com/fcabecciaw/cpsa-example.git
 ```
