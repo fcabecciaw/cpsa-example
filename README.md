@@ -314,7 +314,7 @@ Once we have our dataset, we can move to the process of loading the model. From 
 
 #### 4.2.1  Get ResNet18 from Vitis AI Model Zoo
 
-You have to download the ``pt_vehicle-color-classification_3.5.zip`` archive of ResNet18 reported in this [model.yaml](https://github.com/Xilinx/Vitis-AI/blob/3.5/model_zoo/model-list/pt_vehicle-color-classification_3.5/model.yaml) file. As the file name says, such CNN has been trained RGB images of input size 224x224 and it requires a computation of 3.64GOPs per image. Once downloaded, place it in ```cpsa-example/files``` as it was done for the dataset. The script  [run_all.sh](files/run_all.sh) automatically unzips it and copies the pretrained float model in ```cpsa-example/files/build/float```.
+You have to download the ``pt_vehicle-color-classification_3.5.zip`` archive of ResNet18 reported in this [model.yaml](https://github.com/Xilinx/Vitis-AI/blob/master/model_zoo/model-list/pt_vehicle-color-classification_3.5/model.yaml) file. As the file name says, such CNN has been trained RGB images of input size 224x224 and it requires a computation of 3.64GOPs per image. Once downloaded, place it in ```cpsa-example/files``` as it was done for the dataset. The script  [run_all.sh](files/run_all.sh) automatically unzips it and copies the pretrained float model in ```cpsa-example/files/build/float```.
 
 <!-- From the docker image, unzip the archive ``pt_vehicle-color-classification_3.5.zip`` in the ``files`` folder
 and clean some files/folders, doing the following actions (already available in the [run_all.sh](files/run_all.sh) script):
