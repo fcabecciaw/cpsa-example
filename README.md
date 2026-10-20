@@ -52,7 +52,7 @@ Modifications include reorganization and simplification.
 
 ### 1.1 Rationale
 
-In this Deep Learning (DL) tutorial you will take a public domain Convolutional Neural Network (CNN) like [ResNet18](https://github.com/songrise/CNN_Keras/blob/main/src/ResNet-18.py) and pass it through the [Vitis AI 3.5](https://github.com/Xilinx/Vitis-AI/tree/3.5) stack to run DL inference on FPGA devices; the application is classifying the different colors of the "car object" inside images.
+In this Deep Learning (DL) tutorial you will take a public domain Convolutional Neural Network (CNN) like [ResNet18](https://github.com/songrise/CNN_Keras/blob/main/src/ResNet-18.py) and pass it through the [Vitis AI 3.5](https://github.com/Xilinx/Vitis-AI/tree/v3.5) stack to run DL inference on FPGA devices; the application is classifying the different colors of the "car object" inside images.
 
 Although ResNet18 was already trained on the [ImageNet](https://www.image-net.org/) dataset in the **PyTorch** framework, we will use another version fine-tuned on the [VCoR](https://www.kaggle.com/datasets/landrykezebou/vcor-vehicle-color-recognition-dataset) dataset. 	
 
@@ -87,7 +87,7 @@ Here is what you need to have and do before starting with the real content of th
 
 - Host PC with Ubuntu >= 18.04.5.
 
-- Clone the entire repository of [Vitis AI 3.5](https://github.com/Xilinx/Vitis-AI/tree/3.5) stack from [github.com/Xilinx](https://github.com/Xilinx) web site.
+- Clone the entire repository of [Vitis AI 3.5](https://github.com/Xilinx/Vitis-AI/tree/v3.5) stack from [github.com/Xilinx]([https://github.com/Xilinx](https://github.com/Xilinx) web site.
 
 -  Accurate reading of [Vitis AI User 3.5 Guide 1414](https://docs.xilinx.com/r/en-US/ug1414-vitis-ai) (shortly UG1414).
 
@@ -97,7 +97,7 @@ Here is what you need to have and do before starting with the real content of th
 
 - The ``archive.zip`` file with the [Kaggle](https://www.kaggle.com) dataset of images, as explained in Section [4.1](#41-the-vcor-dataset).
 
-- The [Model Zoo](https://github.com/Xilinx/Vitis-AI/tree/3.5/model_zoo) ``pt_vehicle-color-classification_3.5.zip`` archive, as explained in Section [4.2.1](#421-get-resnet18-from-vitis-ai-model-zoo).
+- The [Model Zoo](https://github.com/Xilinx/Vitis-AI/tree/v3.5/model_zoo) ``pt_vehicle-color-classification_3.5.zip`` archive, as explained in Section [4.2.1](#421-get-resnet18-from-vitis-ai-model-zoo).
 
 
 ### 2.1 Working Directory
